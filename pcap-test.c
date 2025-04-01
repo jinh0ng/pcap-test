@@ -24,6 +24,13 @@ bool parse(Param* param, int argc, char* argv[]) {
 	return true;
 }
 
+// MAC 주소를 xx:xx:xx:xx:xx:xx 형식으로 출력하는 함수
+void print_mac_address(const u_char *mac)
+{
+	printf("%02x:%02x:%02x:%02x:%02x:%02x",
+		   mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+}
+
 int main(int argc, char* argv[]) {
 	if (!parse(&param, argc, argv))
 		return -1;
