@@ -93,8 +93,6 @@ int main(int argc, char *argv[])
 
     while (true)
     {
-        count++;
-
         struct pcap_pkthdr *header;
         const u_char *packet;
         int res = pcap_next_ex(pcap, &header, &packet);
@@ -104,6 +102,10 @@ int main(int argc, char *argv[])
         {
             printf("pcap_next_ex return %d(%s)\n", res, pcap_geterr(pcap));
             break;
+        }
+        if (res > 0)
+        {
+            count++;
         }
         // printf("%u bytes captured\n", header->caplen);
 
