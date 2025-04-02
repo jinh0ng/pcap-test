@@ -103,14 +103,10 @@ int main(int argc, char *argv[])
             printf("pcap_next_ex return %d(%s)\n", res, pcap_geterr(pcap));
             break;
         }
-        if (res > 0)
-        {
-            count++;
-        }
+
         // printf("%u bytes captured\n", header->caplen);
 
         //////////////START MY CODE FROM HERE//////////////
-        printf("\n\n==================Packet %d:=====================\n", count);
 
         // Ethernet 헤더 처리
         if (header->caplen < sizeof(struct libnet_ethernet_hdr))
@@ -129,8 +125,10 @@ int main(int argc, char *argv[])
 
         // TCP 프로토콜 여부 확인
         if (ip_hdr->ip_p != IPPROTO_TCP)
+        {
+            printf("Not TCP packet\n");
             continue;
-
+        }
         // TCP 헤더 처리
         struct libnet_tcp_hdr *tcp_hdr = (struct libnet_tcp_hdr *)(packet + sizeof(struct libnet_ethernet_hdr) + ip_header_length);
         int tcp_header_length = tcp_hdr->th_off * 4;
@@ -142,6 +140,11 @@ int main(int argc, char *argv[])
         int payload_length = header->caplen - header_size;
         const u_char *payload = packet + header_size;
 
+        if (res > 0 && ip_hdr->ip_p == IPPROTO_TCP)
+        {
+            count++;
+        }
+        printf("\n\n==================TCP Packet %d:=====================\n", count);
         // 각 정보 출력
         print_ethernet_info(eth_hdr);
         print_ip_info(ip_hdr);
